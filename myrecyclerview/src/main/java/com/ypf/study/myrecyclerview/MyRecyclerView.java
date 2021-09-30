@@ -45,5 +45,9 @@ public class MyRecyclerView extends ViewGroup {
         abstract void onBindViewHolder(@NonNull VH holder, int position);
 
         abstract int getItemCount();
+
+        public int getItemViewType(int position) {
+            return 0;
+        }
     }
 }

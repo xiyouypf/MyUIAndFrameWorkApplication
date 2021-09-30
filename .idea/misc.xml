@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.370018115942029" />
         <entry key="myrecyclerview/src/main/res/layout/activity_main.xml" value="0.49320652173913043" />
+        <entry key="myrecyclerview/src/main/res/layout/item_table1.xml" value="0.335" />
+        <entry key="myrecyclerview/src/main/res/layout/item_table2.xml" value="0.18465045592705168" />
         <entry key="myrecyclerview/src/main/res/layout/item_text_view_01.xml" value="0.335" />
         <entry key="myui/src/main/res/drawable/text_bg.xml" value="0.5354166666666667" />
         <entry key="myui/src/main/res/layout/activity_main.xml" value="0.49291075896580483" />
