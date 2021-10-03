@@ -18,7 +18,7 @@ public class MyRecyclerViewPool {
         ScrapData scrapData = mScrap.get(viewType);
         if (scrapData != null && !scrapData.mScrapHeap.isEmpty()) {
             List<MyViewHolder> scrapHeap = scrapData.mScrapHeap;
-            for (int i = scrapHeap.size(); i > 0; i--) {
+            for (int i = scrapHeap.size() - 1; i > 0; i--) {
                 return scrapHeap.remove(i);
             }
         }
