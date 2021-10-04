@@ -1,4 +1,4 @@
-package com.ypf.study.myui;
+package com.ypf.study.myui.myflowlayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 自定义流式布局
+ */
 public class MyFlowLayout extends ViewGroup {
     private static final String TAG = "MyFlowLayout";
     //存储所有的子控件

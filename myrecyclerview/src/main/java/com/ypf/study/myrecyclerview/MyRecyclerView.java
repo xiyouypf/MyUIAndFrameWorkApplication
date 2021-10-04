@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.Scroller;
 
 import androidx.annotation.NonNull;
 
@@ -40,6 +42,9 @@ public class MyRecyclerView extends ViewGroup {
     private int scrollY;
     //View的第一行 是内容行的多少行
     private int firstRow;
+    //惯性滑动 使用速度
+    private VelocityTracker velocityTracker;
+    private int minmumVelocity;
 
     public MyRecyclerView(Context context) {
         super(context);
@@ -51,7 +56,8 @@ public class MyRecyclerView extends ViewGroup {
             viewList = new ArrayList<>();
         }
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
-        this.touchSlop = viewConfiguration.getScaledTouchSlop();
+        this.touchSlop = viewConfiguration.getScaledTouchSlop();//获取最小滑动距离
+        this.minmumVelocity = viewConfiguration.getScaledMinimumFlingVelocity();//获取最小速度
     }
 
     public MyRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -120,13 +126,59 @@ public class MyRecyclerView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (velocityTracker == null) {
+            velocityTracker = VelocityTracker.obtain();
+        }
+        velocityTracker.addMovement(event);
         //滑动
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
             int y2 = (int) event.getRawY();
             int diff = (int) (currentY - event.getRawY());
             scrollBy(0, diff);
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            //用户抬手，计算速度
+            velocityTracker.computeCurrentVelocity(1000);
+            int velocity = (int) velocityTracker.getYVelocity();
+            int initY = scrollY + sumArray(heights, 1, firstRow);
+            int maxY = Math.max(0, sumArray(heights, 0, heights.length) - height);
+            if (Math.abs(velocity) > minmumVelocity) {
+                new Flinger(getContext()).start(0, initY, 0, velocity, 0, maxY);
+            }
+
         }
         return super.onTouchEvent(event);
+    }
+
+    class Flinger implements Runnable {
+        //记录偏移量
+        private int initY;
+        private Scroller scroller;
+
+        public Flinger(Context context) {
+            this.scroller = new Scroller(context);
+        }
+
+        void start(int initX, int initY, int initialVelocityX, int initialVelocityY, int maxX, int maxY) {
+            scroller.fling(initX, initY, initialVelocityX, initialVelocityY, 0, maxX, 0, maxY);
+            this.initY = initY;
+            post(this);
+        }
+        @Override
+        public void run() {
+            if (scroller.isFinished()) {
+                return;
+            }
+            boolean more = scroller.computeScrollOffset();
+            //滑动一点点
+            int y = scroller.getCurrY();
+            int diff = initY - y;
+            if (diff != 0) {
+                scrollBy(0, diff);
+            }
+            if (more) {
+                post(this);
+            }
+        }
     }
 
     @Override
@@ -152,8 +204,7 @@ public class MyRecyclerView extends ViewGroup {
         //摆放
         scrollY += y;
         scrollBounds();
-        //上滑
-        if (scrollY > 0) {
+        if (scrollY > 0) {//上滑
             while (scrollY > heights[firstRow]) {
                 //扔到回收池 firstRow++
                 if (!viewList.isEmpty()) {
@@ -170,8 +221,7 @@ public class MyRecyclerView extends ViewGroup {
                 viewList.add(viewList.size(), viewHolder);
                 Log.d(TAG, "scrollBy: " + "上滑添加一个元素");
             }
-            //下滑
-        } else {
+        } else {//下滑
             while (scrollY < 0) {
                 firstRow--;
                 obtainView(firstRow, width, heights[firstRow]);
