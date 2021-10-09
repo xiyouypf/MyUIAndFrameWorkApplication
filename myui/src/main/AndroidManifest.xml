@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyUIAndFrameWorkApplication">
         <activity
+            android:name=".springback.MySpringbackActivity"
+            android:exported="true" />
+        <activity
             android:name="com.ypf.study.MainActivity"
             android:exported="true">
             <intent-filter>
