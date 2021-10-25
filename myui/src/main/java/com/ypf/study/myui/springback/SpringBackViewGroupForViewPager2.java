@@ -53,30 +53,42 @@ public class SpringBackViewGroupForViewPager2 extends ConstraintLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean intercept = false;
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            mCurrentY = (int) ev.getRawY();
+            mCurrentY = (int) ev.getY();
             mCurrentTempY = mCurrentY;
             intercept = false;
             stopVal = stopAnim();
+            if (viewPager.getCurrentItem() == 0 && ev.getY() <= viewPager.getScrollY()) {
+                intercept = true;
+            } else if (viewPager.getCurrentItem() == viewPager.getAdapter().getItemCount() - 1 && ev.getY() >= getHeight() + viewPager.getScrollY()) {
+                intercept = true;
+            }
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
-            int y2 = (int) ((int) mCurrentY - ev.getRawY());
+            int y2 = (int) (mCurrentY - ev.getY());
             if (Math.abs(y2) > touchSlop) {
-                if (viewPager.getCurrentItem() == 0 && y2 < 0) {
+                if ((viewPager.getCurrentItem() == 0 && y2 < 0)) {
                     intercept = true;
-                } else if (viewPager.getCurrentItem() == viewPager.getAdapter().getItemCount() - 1 && y2 > 0) {
+                } else if (viewPager.getCurrentItem() == 0 && y2 > 0 && lastAnimIsRunning()) {
+                    viewPager.scrollTo(0, 0);
+                } else if ((viewPager.getCurrentItem() == viewPager.getAdapter().getItemCount() - 1 && y2 > 0)) {
                     intercept = true;
+                } else if (viewPager.getCurrentItem() == viewPager.getAdapter().getItemCount() - 1 && y2 < 0 && lastAnimIsRunning()) {
+                    viewPager.scrollTo(0, 0);
                 }
             }
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             intercept = false;
+            startAnim(stopVal);
         }
         return intercept;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            diffY = (int) (mCurrentTempY - event.getRawY());
-            finalDiffY = (int) (mCurrentY - event.getRawY()) + stopVal;
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            startAnim(stopVal);
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            diffY = (int) (mCurrentTempY - event.getY());
+            finalDiffY = (int) (mCurrentY - event.getY()) + stopVal;
             if (finalDiffY < 0 && finalDiffY <= -maxMoveHeight) {
                 finalDiffY = -maxMoveHeight;
                 mCurrentTempY = diffY;
@@ -85,7 +97,7 @@ public class SpringBackViewGroupForViewPager2 extends ConstraintLayout {
                 mCurrentTempY = finalDiffY;
             } else {
                 viewPager.scrollBy(0, diffY);
-                mCurrentTempY = (int) event.getRawY();
+                mCurrentTempY = (int) event.getY();
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             startAnim(finalDiffY);
@@ -99,8 +111,11 @@ public class SpringBackViewGroupForViewPager2 extends ConstraintLayout {
     }
 
     private void startAnim(int diffY) {
+        if (scrollYAnim != null && lastAnimIsRunning()) {
+            scrollYAnim.cancel();
+        }
         scrollYAnim = ObjectAnimator.ofInt(viewPager, "ScrollY", diffY, 0);
-        scrollYAnim.setDuration((long) (400 * (Math.abs((float) diffY) / maxMoveHeight)));
+        scrollYAnim.setDuration((long) (700 * (Math.abs((float) diffY) / maxMoveHeight)));
         scrollYAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         scrollYAnim.start();
     }
@@ -113,4 +128,12 @@ public class SpringBackViewGroupForViewPager2 extends ConstraintLayout {
         }
         return lastScrollY;
     }
+
+    private boolean lastAnimIsRunning() {
+        if (scrollYAnim != null) {
+            return !scrollYAnim.isPaused();
+        }
+        return false;
+    }
+
 }
