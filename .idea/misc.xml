@@ -3,11 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../.gradle/caches/transforms-3/4f7fde6443b19e6ece3941e32d79f216/transformed/appcompat-1.2.0/res/layout/abc_screen_content_include.xml" value="0.4354166666666667" />
+        <entry key="../../.gradle/caches/transforms-3/4f7fde6443b19e6ece3941e32d79f216/transformed/appcompat-1.2.0/res/layout/abc_screen_simple.xml" value="0.4354166666666667" />
+        <entry key="../../.gradle/caches/transforms-3/a48e5d9233d8d33805be064205b1bf0d/transformed/appcompat-1.1.0/res/layout-v26/abc_screen_toolbar.xml" value="0.4354166666666667" />
+        <entry key="../../.gradle/caches/transforms-3/a48e5d9233d8d33805be064205b1bf0d/transformed/appcompat-1.1.0/res/layout/abc_dialog_title_material.xml" value="0.4354166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.370018115942029" />
         <entry key="myrecyclerview/src/main/res/layout/activity_main.xml" value="0.49320652173913043" />
         <entry key="myrecyclerview/src/main/res/layout/item_table1.xml" value="0.335" />
         <entry key="myrecyclerview/src/main/res/layout/item_table2.xml" value="0.18465045592705168" />
         <entry key="myrecyclerview/src/main/res/layout/item_text_view_01.xml" value="0.335" />
+        <entry key="myroom/src/main/res/layout/activity_main.xml" value="0.18161094224924013" />
         <entry key="myui/src/main/res/drawable/text_bg.xml" value="0.5354166666666667" />
         <entry key="myui/src/main/res/layout/activity_main.xml" value="0.49291075896580483" />
         <entry key="myui/src/main/res/layout/activity_my_springback.xml" value="0.1" />
