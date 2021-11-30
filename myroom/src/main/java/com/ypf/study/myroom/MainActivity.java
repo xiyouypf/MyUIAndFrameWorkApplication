@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -16,38 +17,56 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.ypf.study.myroom.bean.User;
-import com.ypf.study.myroom.dao.UserDao;
-import com.ypf.study.myroom.database.AppDatabase;
+//import com.ypf.study.myroom.bean.User;
+//import com.ypf.study.myroom.dao.UserDao;
+//import com.ypf.study.myroom.database.AppDatabase;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textView;
+    public static Pattern LABEL_PATTERN = Pattern.compile("#\\s?[a-z0-9A-Z\u4e00-\u9fa5]+");
+    private static final String TAG = "MainActivity-------------";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate:" + "   " + "www");
+
         textView = findViewById(R.id.test_span);
-        String text = "#美妆f1 #ypf2 #ypf3 #ypf1 #ypf2 #ypf3 #ypf1 #ypf2 #ypf3 #ypf1 #ypf2 #ypf3 #ypf1 #ypf2 #ypf3 #ypf1 #ypf2 #ypf3";
+        String text = " # 影综创作者激励计划   # 我的快乐源泉   # 追剧   # 聚会开心时刻 #韩国#好多个  # 青春不毕业  闺蜜模范，谁身边不想要一个这样的姐妹  # 青春不毕业 ";
+        Log.d(TAG, "onCreate: " + text);
         SpannableStringBuilder builder = new SpannableStringBuilder(text);
-        int start = 0;
-        int end = 5;
-        for (int i = 0; i < text.split(" ").length; i++) {
-            //稍微设置标签文字小一点
-            builder.setSpan(new RelativeSizeSpan(1f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            //设置圆角背景
-//        builder.setSpan(new RoundBackgroundColorSpan(Color.parseColor(/*"#" + goodsTags.get(i).getTags_color()*/Color.BLUE), Color.WHITE), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.setSpan(new RoundBackgroundColorSpan(Color.GRAY, Color.BLACK), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.setSpan(new BackgroundColorSpan(Color.GRAY), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            start += 6;
-            end += 6;
+        for (int i = 0; i < builder.length() - 3; i++) {
+            if ((builder.charAt(i) == ' ') && (builder.charAt(i + 1) == ' ') && (builder.charAt(i + 2) == ' ')) {
+                builder.replace(i + 2, i + 3, "");
+            }
         }
-//        textView.setLineSpacing(90f, 0);
-//        textView.setLineHeight(90);
+        for (int i = 1; i < builder.length() - 1; i++) {
+            if (builder.charAt(i) == '#' && builder.charAt(i - 1) != ' ') {
+                builder.replace(i - 1, i, builder.charAt(i - 1) + " ");
+            }
+        }
+        Log.d(TAG, "onCreate: " + builder);
+        Matcher m = LABEL_PATTERN.matcher(builder);
+        while (m.find()) {
+            int start = m.start();
+            int end = m.end();
+            if (end - start <= 1) {
+                continue;
+            }
+            builder.setSpan(new RoundBackgroundColorSpan(Color.GRAY, Color.BLACK), start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
         textView.setText(builder);
     }
+
+    private int dp2px(int dp) {
+        return 5 * dp;
+    }
+/*
 
     public void updataData(View view) {
         new Thread(new Runnable() {
@@ -120,5 +139,6 @@ public class MainActivity extends AppCompatActivity {
             super.onOpen(db);
         }
     }
+*/
 
 }

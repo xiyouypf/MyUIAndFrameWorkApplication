@@ -1,3 +1,4 @@
+/*
 package com.ypf.study.myroom.dao;
 
 import androidx.room.Dao;
@@ -46,3 +47,4 @@ public interface UserDao {
     @Update
     void update(User user);
 }
+*/

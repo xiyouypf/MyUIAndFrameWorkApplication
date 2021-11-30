@@ -1,3 +1,4 @@
+/*
 package com.ypf.study.myroom.bean;
 
 import androidx.annotation.NonNull;
@@ -36,4 +37,4 @@ public class User {
 
     //5.)对于一个Room数据库的表而言，还有很多其他注解和属性可以使用，诸如索引，
     // 外键，关系数据支持的特性room都支持。但对于客户端来说一般也用不到，以上这些就够用了。
-}
+}*/

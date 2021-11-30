@@ -1,3 +1,4 @@
+/*
 package com.ypf.study.myroom.database;
 
 import androidx.room.Database;
@@ -16,3 +17,4 @@ public abstract class AppDatabase extends RoomDatabase {
 
 
 }
+*/
