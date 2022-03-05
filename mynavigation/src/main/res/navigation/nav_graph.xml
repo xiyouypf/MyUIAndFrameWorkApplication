@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/afragment">
+
+    <fragment
+        android:id="@+id/afragment"
+        android:name="com.tencent.mini.mynavigation.fragment.AFragment"
+        android:label="afragment"
+        tools:layout="@layout/a_fragment">
+        <action
+            android:id="@+id/action_afragment_to_bfragment"
+            app:destination="@id/bfragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bfragment"
+        android:name="com.tencent.mini.mynavigation.fragment.BFragment"
+        android:label="bfragment"
+        tools:layout="@layout/b_fragment">
+        <argument
+            android:name="name"
+            android:defaultValue="MAX" />
+        <action
+            android:id="@+id/action_bfragment_to_cfragment2"
+            app:destination="@id/cfragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cfragment"
+        android:name="com.tencent.mini.mynavigation.fragment.CFragment"
+        android:label="cfragment"
+        tools:layout="@layout/c_fragment" >
+        <action
+            android:id="@+id/action_cfragment_to_DFragment"
+            app:destination="@id/DFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/DFragment"
+        android:name="com.tencent.mini.mynavigation.fragment.DFragment"
+        android:label="fragment_d"
+        tools:layout="@layout/fragment_d" />
+
+</navigation>

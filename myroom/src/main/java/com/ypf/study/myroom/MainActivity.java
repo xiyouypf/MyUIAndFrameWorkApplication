@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity {
     private TextView textView;
     public static Pattern LABEL_PATTERN = Pattern.compile("#\\s?[a-z0-9A-Z\u4e00-\u9fa5]+");
+    public static Pattern LABEL_PATTERN_REQ = Pattern.compile("\\s#\\s[a-z0-9A-Z\u4e00-\u9fa5]+\\s");
     private static final String TAG = "MainActivity-------------";
 
     @Override
@@ -37,20 +38,32 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate:" + "   " + "www");
 
         textView = findViewById(R.id.test_span);
-        String text = " # 影综创作者激励计划   # 我的快乐源泉   # 追剧   # 聚会开心时刻 #韩国#好多个  # 青春不毕业  闺蜜模范，谁身边不想要一个这样的姐妹  # 青春不毕业 ";
-        Log.d(TAG, "onCreate: " + text);
+        String text = " # 影综创作者激励计划   # 我的快乐源泉   # 追剧   # 聚会开心时刻 #韩国#好多个   # 青春不毕业  闺蜜模范，谁身边不想要一个这样的姐妹   # 青春不毕业 ";
         SpannableStringBuilder builder = new SpannableStringBuilder(text);
-        for (int i = 0; i < builder.length() - 3; i++) {
-            if ((builder.charAt(i) == ' ') && (builder.charAt(i + 1) == ' ') && (builder.charAt(i + 2) == ' ')) {
-                builder.replace(i + 2, i + 3, "");
+//        for (int i = 0; i < builder.length() - 3; i++) {
+//            if ((builder.charAt(i) == ' ') && (builder.charAt(i + 1) == ' ') && (builder.charAt(i + 2) == ' ')) {
+//                builder.replace(i + 2, i + 3, "");
+//            }
+//        }
+//        for (int i = 1; i < builder.length() - 1; i++) {
+//            if (builder.charAt(i) == '#' && builder.charAt(i - 1) != ' ') {
+//                builder.replace(i - 1, i, builder.charAt(i - 1) + " ");
+//            }
+//        }
+        Matcher w = LABEL_PATTERN_REQ.matcher(builder);
+        while (w.find()) {
+            int start = w.start();
+            int end = w.end();
+            if (end - start <= 1) {
+                continue;
             }
+            builder.setSpan(new AbsoluteSizeSpan(dp2px(4)), start,
+                    start + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new AbsoluteSizeSpan(dp2px(4)),
+                    start + 2, start + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new AbsoluteSizeSpan(dp2px(4)), end - 1, end,
+                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
-        for (int i = 1; i < builder.length() - 1; i++) {
-            if (builder.charAt(i) == '#' && builder.charAt(i - 1) != ' ') {
-                builder.replace(i - 1, i, builder.charAt(i - 1) + " ");
-            }
-        }
-        Log.d(TAG, "onCreate: " + builder);
         Matcher m = LABEL_PATTERN.matcher(builder);
         while (m.find()) {
             int start = m.start();
@@ -58,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
             if (end - start <= 1) {
                 continue;
             }
+            Log.d(TAG, "onCreate: " + "start=" + start + ",end=" + end + ",subStr=" + builder.subSequence(start, end));
             builder.setSpan(new RoundBackgroundColorSpan(Color.GRAY, Color.BLACK), start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         }
+        Log.d(TAG, "onCreate: "+builder);
         textView.setText(builder);
     }
 
